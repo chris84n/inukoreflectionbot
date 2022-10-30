@@ -1,4 +1,4 @@
 nohup.out
 *.log
-
-
+inuko_config.py
+__pycache__/*

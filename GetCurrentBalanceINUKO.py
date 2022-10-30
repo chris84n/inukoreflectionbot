@@ -18,14 +18,15 @@ from pathlib import Path
 import sqlite3
 from sqlite3 import Error
 import telebot
+#Import file with secret API keys for telegram bot and BSCScan API-key
+import inuko_config
 
 ##############
 #Telegram Bot
 ##############
 
 #Definition of telegram bot with API created by BotFather in Telegram
-bot = telebot.TeleBot('API-KEY-HERE')
-
+bot = telebot.TeleBot(inuko_config.telegram_bot_api)
 
 ############
 #SQLLite DB
@@ -44,7 +45,7 @@ contract_address="0xEa51801b8F5B88543DdaD3D1727400c15b209D8f"
 holder_address="0xEa51801b8F5B88543DdaD3D1727400c15b209D8f"
 
 #BSCScan API Key
-api_key="API-KEY-BSCScan-HERE"
+api_key=inuko_config.bsccan_api
 
 #BSCScan API URL
 bscscan_api="https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress="+contract_address+"&address="+holder_address+"&tag=latest&apikey="+api_key
@@ -121,7 +122,7 @@ def SendMessageToTelegram(message):
  chatids=getall_chatid_in_db()
  if(chatids != None):
   for chatid_row in chatids:
-   chatid = chatid_row
+   chatid = chatid_row[0]
    bot.send_message(chatid, message)
  else:
   print("No chat ids in DB found")
@@ -147,10 +148,10 @@ if(read_current_value(filename_last_balance) == None):
 else:
  #Check if current balance is lower than last saved value
  if(curr_balance["Balance"] < read_current_value(filename_last_balance)):
+   #Save current value
+   write_file(filename_last_balance,curr_balance)
    #Send Message to registered Telegram Chats
    SendMessageToTelegram("INUKO Reflection Bot - Information - Rewards where payed out")
-   # Save current value
-   write_file(filename_last_balance,curr_balance)
  else:
    # Just save current value to file
    write_file(filename_last_balance,curr_balance)

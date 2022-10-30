@@ -21,6 +21,8 @@ import asyncio
 from decimal import Decimal
 from pathlib import Path
 import json
+#Import inuko_config.py file with API keys for Telegram Bot and BSCScan
+import inuko_config
 
 ################################
 # Balance Info
@@ -107,7 +109,7 @@ def check_chatid_in_db(chatid,conn):
 ###################
 
 # Telegram Bot definition with API Key
-bot = AsyncTeleBot('API-KEY-HERE')
+bot = AsyncTeleBot(inuko_config.telegram_bot_api)
 
 ##################
 # Bot handlers

@@ -1,0 +1,5 @@
+#TelegramAPI
+telegram_bot_api='API-KEY-OF-TELEGRAM-BOT-HERE'
+
+#BSCScan API
+bsccan_api='API-KEY-OF-BSCCAN-HERE'
