@@ -32,17 +32,17 @@ import inuko_config
 #    Definitions
 ################
 filename_last_balance="/srv/inuko_reflections/current_balance_inuko.json"
-
+filename_last_payout="/srv/inuko_reflections/last_payout.json"
 
 ###############
 #    Functions
 ################
-def read_current_value(filename):
+def read_current_value(filename,key):
     my_file = Path(filename)
     if my_file.is_file():
        with open(filename,'r') as f:
          data = json.load(f)
-         return data["Balance"]
+         return data[key]
     else:
        return None
 
@@ -165,13 +165,15 @@ async def send_unregister(message):
 @bot.message_handler(commands=['balance_inukoreflection_bot'])
 async def send_current_balance(message):
   print("Send current balance")
-  if(read_current_value(filename_last_balance) == None):
+  if(read_current_value(filename_last_balance,"Balance") == None):
    await bot.reply_to(message,"Current balance is currently not available")
   else:
-   cur_balance=read_current_value(filename_last_balance)
+   cur_balance=read_current_value(filename_last_balance,"Balance")
+   last_payout=read_current_value(filename_last_payout,"LastPayout")
    rest=25000.0-cur_balance
    cur_balance=str(cur_balance)
-   await bot.reply_to(message,"Current balance is "+cur_balance+" INUKO! Required to next reflection payout: "+str(rest)+ " INUKO")
+   last_payout=str(last_payout)
+   await bot.reply_to(message,"Current balance is "+cur_balance+" INUKO!\nRequired to next reflection payout: "+str(rest)+ " INUKO.\nLast payout:\n"+last_payout)
 
 # Any other message send in groups / private chats will be ignored, because no handler defined!
 

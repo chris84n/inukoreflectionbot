@@ -20,7 +20,9 @@ from sqlite3 import Error
 import telebot
 #Import file with secret API keys for telegram bot and BSCScan API-key
 import inuko_config
-
+from datetime import datetime
+from time import gmtime, strftime
+import time
 ##############
 #Telegram Bot
 ##############
@@ -54,10 +56,10 @@ bscscan_api="https://api.bscscan.com/api?module=account&action=tokenbalance&cont
 #Other definitions
 ##################
 filename_last_balance="/srv/inuko_reflections/current_balance_inuko.json"
-
+filename_last_payout="/srv/inuko_reflections/last_payout.json"
 
 #Get Current Date in UTC
-#current_time=strftime("%Y-%m-%d %H:%M:%S",gmtime())
+current_time=strftime("%Y-%m-%d %H:%M:%S",gmtime())
 
 ####################
 # Functions
@@ -68,12 +70,12 @@ filename_last_balance="/srv/inuko_reflections/current_balance_inuko.json"
 #################################
 
 #Read current value from file
-def read_current_value(filename):
+def read_current_value(filename,key):
     my_file = Path(filename)
     if my_file.is_file():
        with open(filename,'r') as f:
          data = json.load(f)
-         return data["Balance"]
+         return data[key]
     else:
        return None
 
@@ -139,19 +141,20 @@ balance = response_out["result"]
 balance_dec = Decimal(balance)/1000000000000000000
 balance=float(balance_dec)
 
-
 #Check balance current vs saved
 curr_balance = {"Balance":balance}
-if(read_current_value(filename_last_balance) == None):
+if(read_current_value(filename_last_balance,"Balance") == None):
  #If file was not found or file empty, then create file and save value
  write_file(filename_last_balance,curr_balance)
 else:
  #Check if current balance is lower than last saved value
- if(curr_balance["Balance"] < read_current_value(filename_last_balance)):
+ if(curr_balance["Balance"] < read_current_value(filename_last_balance,"Balance")):
+   old_val=read_current_value(filename_last_balance,"Balance");
    #Save current value
    write_file(filename_last_balance,curr_balance)
+   write_file(filename_last_payout,{"LastPayout":current_time})
    #Send Message to registered Telegram Chats
-   SendMessageToTelegram("INUKO Reflection Bot - Information - Rewards where payed out")
+   SendMessageToTelegram("INUKO Reflection Bot - Information - Rewards where payed out (Payed out at balance:"+str(old_val)+" New balance:"+str(curr_balance["Balance"])+")")
  else:
    # Just save current value to file
    write_file(filename_last_balance,curr_balance)
