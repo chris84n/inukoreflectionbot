@@ -11,5 +11,5 @@ You can get help with command **/help**<br><br>
 After registration only the chatid of the telegram group / private chat will be written to a SQLite database<br>
 With unregistration this entry will be deleted. <br><br>
 
-required API-KEYs are removed in source code. 
+required API-KEYs are now stored in file inuko_config.py. There is an exampe file called inuko_config.py.example in repository. Just copy it to inuko_config.py and change the API keys as you require.
 
