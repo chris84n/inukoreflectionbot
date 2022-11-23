@@ -110,7 +110,10 @@ def check_chatid_in_db(chatid,conn):
 
 # Telegram Bot definition with API Key
 bot = AsyncTeleBot(inuko_config.telegram_bot_api)
-
+dancing='\uE51F'
+smily='\U0001F970'
+rocket='\uE10D'
+dollar='\U0001F911'
 ##################
 # Bot handlers
 ##################
@@ -170,10 +173,11 @@ async def send_current_balance(message):
   else:
    cur_balance=read_current_value(filename_last_balance,"Balance")
    last_payout=read_current_value(filename_last_payout,"LastPayout")
-   rest=25000.0-cur_balance
-   cur_balance=str(cur_balance)
+   rest=25000-round(cur_balance)
+   cur_balance=str(round(cur_balance))
    last_payout=str(last_payout)
-   await bot.reply_to(message,"Current balance is "+cur_balance+" INUKO!\nRequired to next reflection payout: "+str(rest)+ " INUKO.\nLast payout:\n"+last_payout)
+   text=f"INUKO reflection information\n{rocket} Reflection pool: [{cur_balance}/25000] INUKO\n{smily} Next payout in: [{rest}] INUKO\n{dancing} Last payout: {last_payout}"
+   await bot.reply_to(message,text)
 
 # Any other message send in groups / private chats will be ignored, because no handler defined!
 

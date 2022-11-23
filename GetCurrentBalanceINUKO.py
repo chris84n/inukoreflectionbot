@@ -29,6 +29,7 @@ import time
 
 #Definition of telegram bot with API created by BotFather in Telegram
 bot = telebot.TeleBot(inuko_config.telegram_bot_api)
+dollar='\U0001F911'
 
 ############
 #SQLLite DB
@@ -124,8 +125,11 @@ def SendMessageToTelegram(message):
  chatids=getall_chatid_in_db()
  if(chatids != None):
   for chatid_row in chatids:
-   chatid = chatid_row[0]
-   bot.send_message(chatid, message)
+   try:
+    chatid = chatid_row[0]
+    bot.send_message(chatid, message)
+   except Exception as err:
+    print(f"Unexpected {err=}, {type(err)=},chatid {chatid}")
  else:
   print("No chat ids in DB found")
 
@@ -154,7 +158,9 @@ else:
    write_file(filename_last_balance,curr_balance)
    write_file(filename_last_payout,{"LastPayout":current_time})
    #Send Message to registered Telegram Chats
-   SendMessageToTelegram("INUKO Reflection Bot - Information - Rewards where payed out (Payed out at balance:"+str(old_val)+" New balance:"+str(curr_balance["Balance"])+")")
+   dollar=10*dollar
+   text=(f"{dollar}\nINUKO reflection information\n{dollar}\nRewards have been paid out!")
+   SendMessageToTelegram(text)
  else:
    # Just save current value to file
    write_file(filename_last_balance,curr_balance)
