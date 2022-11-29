@@ -13,3 +13,11 @@ With unregistration this entry will be deleted. <br><br>
 
 required API-KEYs are now stored in file inuko_config.py. There is an exampe file called inuko_config.py.example in repository. Just copy it to inuko_config.py and change the API keys as you require.
 
+
+If you want to support my community work, you can spent some tokens to BSC wallet: <br>0xE9221F2176de92FF3087de349A1A4dd845ED87E2<br>
+<br>
+Every spending will be directed after tax to social projects at every end of month.
+
+
+
+
